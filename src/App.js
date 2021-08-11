@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+// in src/App.js
+import * as React from "react";
+import { Admin, Resource } from "react-admin";
+import jsonServerProvider from "ra-data-json-server";
+import { UserList } from './Users'
+import MyLoginPage from "./MyLoginPage";
+import MyLogoutButton from "./MyLogoutButton";
+//import authProvider from "./authProvider";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const dataProvider = jsonServerProvider("https://jsonplaceholder.typicode.com");
+const authProvider = {
+  // authentication
+  login: (params) => Promise.resolve(),
+  checkError: (error) => Promise.resolve(),
+  checkAuth: (params) => Promise.resolve(),
+  logout: () => Promise.resolve(),
+  getIdentity: () => Promise.resolve(),
+  // authorization
+  getPermissions: (params) => Promise.resolve(),
+};
+const App = () => (
+  <Admin
+    authProvider={authProvider}
+    loginPage={MyLoginPage}
+    logoutButton={MyLogoutButton}
+    dataProvider={dataProvider}
+  >
+    <Resource name="Users" list={UserList} />
+  </Admin>
+);
 
 export default App;
